@@ -19,11 +19,14 @@ async function createWindow() {
   process.chdir(path.resolve(__dirname));
 
   server = await cli(["sketch.js", "--stream", "--port", 9966]);
+  server.on("connect", (c) => {
+    win.loadURL(c.uri);
+    // win.loadURL("http://localhost:9966/");
+    // await waitForLocalhost({ port: 9966 });
+    win.show();
+    // win.webContents.reloadIgnoringCache();
+  });
 
-  win.loadURL("http://localhost:9966/");
-  await waitForLocalhost({ port: 9966 });
-  win.show();
-  win.webContents.reloadIgnoringCache();
   // win.webContents.openDevTools();
 }
 
