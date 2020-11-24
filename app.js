@@ -2,6 +2,9 @@ const { spawn } = require("child_process");
 const path = require("path");
 const { app, BrowserWindow } = require("electron");
 const waitForLocalhost = require("wait-for-localhost");
+const cli = require("canvas-sketch-cli");
+
+let server;
 
 async function createWindow() {
   const win = new BrowserWindow({
@@ -14,11 +17,8 @@ async function createWindow() {
   });
 
   process.chdir(path.resolve(__dirname));
-  spawn("canvas-sketch", ["sketch.js", "--stream"], {
-    stdio: "inherit",
-  });
 
-  // await require('canvas-sketch-cli')('sketch.js')
+  server = await cli(["sketch.js", "--stream", "--port", 9966]);
 
   win.loadURL("http://localhost:9966/");
   await waitForLocalhost({ port: 9966 });
@@ -29,6 +29,13 @@ async function createWindow() {
 
 // app.whenReady().then(createWindow);
 app.on("ready", createWindow);
+app.on("quit", () => {
+  if (server) {
+    console.log("quitting");
+    server.close();
+    server = null;
+  }
+});
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();

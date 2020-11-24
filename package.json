@@ -14,12 +14,11 @@
     "canvas-sketch-cli": "^1.11.9",
     "canvas-sketch-util": "^1.10.0",
     "electron": "^11.0.3",
-    "shelljs": "^0.8.4",
     "wait-for-localhost": "^3.3.0"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "node test.js"
+    "test": "electron app.js"
   },
   "keywords": [],
   "repository": {
