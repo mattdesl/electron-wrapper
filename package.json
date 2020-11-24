@@ -1,0 +1,33 @@
+{
+  "name": "electron-wrapper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "license": "MIT",
+  "author": {
+    "name": "Matt DesLauriers",
+    "email": "dave.des@gmail.com",
+    "url": "https://github.com/mattdesl"
+  },
+  "dependencies": {
+    "canvas-sketch": "^0.7.4",
+    "canvas-sketch-cli": "^1.11.9",
+    "canvas-sketch-util": "^1.10.0",
+    "electron": "^11.0.3",
+    "shelljs": "^0.8.4",
+    "wait-for-localhost": "^3.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mattdesl/electron-wrapper.git"
+  },
+  "homepage": "https://github.com/mattdesl/electron-wrapper",
+  "bugs": {
+    "url": "https://github.com/mattdesl/electron-wrapper/issues"
+  }
+}
