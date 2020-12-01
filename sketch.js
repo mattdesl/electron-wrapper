@@ -2,8 +2,8 @@ const canvasSketch = require("canvas-sketch");
 const { lerp } = require("canvas-sketch-util/math");
 
 const settings = {
-  duration: 3,
-  dimensions: [640, 640],
+  duration: 60,
+  dimensions: [2048, 2048],
   scaleToView: true,
   playbackRate: "throttle",
   animate: true,
@@ -11,7 +11,7 @@ const settings = {
 };
 
 // Start the sketch
-canvasSketch(({ update }) => {
+function sketch ({ update }) {
   return ({ context, frame, width, height, playhead }) => {
     context.clearRect(0, 0, width, height);
     context.fillStyle = "white";
@@ -69,4 +69,29 @@ canvasSketch(({ update }) => {
     context.fillRect(x - length / 2, y - thickness / 2, length, thickness);
     context.restore();
   }
-}, settings);
+}
+
+(async () => {
+  const manager = await canvasSketch(sketch, settings);
+
+  if (window.location.search.includes('autostart')) {
+    const endRecord = manager.sketch.endRecord || (() => {});
+    // wrap end event
+    const p = new Promise(resolve => {
+      manager.sketch.endRecord = (props) => {
+        endRecord.call(sketch, props)
+        resolve();
+      };
+    });
+
+    // start recording
+    const now = Date.now()
+    manager.record();
+
+    // wait for end event
+    await p;
+    
+    console.log('Done recording', Date.now() - now)
+    window.close();
+  }
+})();

@@ -2,7 +2,7 @@
   "name": "electron-wrapper",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./app.js",
   "license": "MIT",
   "author": {
     "name": "Matt DesLauriers",
@@ -12,13 +12,16 @@
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.20",
     "canvas-sketch": "^0.7.4",
-    "canvas-sketch-cli": "^1.11.9",
+    "canvas-sketch-cli": "^1.11.12",
     "canvas-sketch-util": "^1.10.0",
+    "cross-env": "^7.0.2",
     "electron": "^11.0.3",
+    "electron-packager": "^15.1.0",
     "wait-for-localhost": "^3.3.0"
   },
   "devDependencies": {},
   "scripts": {
+    "package": "cross-env NODE_ENV=production DEBUG=electron-packager electron-packager . --platform=darwin --arch=x64 --out=packaged --overwrite",
     "test": "electron app.js"
   },
   "keywords": [],

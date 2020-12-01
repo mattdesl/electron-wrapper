@@ -1,9 +1,9 @@
 const { spawn } = require("child_process");
 const path = require("path");
 const { app, BrowserWindow } = require("electron");
-const waitForLocalhost = require("wait-for-localhost");
 const cli = require("canvas-sketch-cli");
 
+let autostart = false;
 let server;
 
 async function createWindow() {
@@ -11,42 +11,40 @@ async function createWindow() {
     show: false,
     width: 800,
     height: 600,
-    // webPreferences: {
-    // nodeIntegration: true,
-    // },
+  });
+
+  win.on('closed', () => {
+    app.quit();
   });
 
   process.chdir(path.resolve(__dirname));
 
-  server = await cli(["sketch.js", "--stream", "--port", 9966]);
+  server = await cli(["sketch.js"], {
+    port: 5921,
+    stream: {
+      format: 'mp4', // mp4 or gif
+      // scale: '512:-2', // scale param for ffmpeg
+      buffer: true // whether to buffer frames into memory or not, default false
+    }
+  });
   server.on("connect", (c) => {
-    win.loadURL(c.uri);
-    // win.loadURL("http://localhost:9966/");
-    // await waitForLocalhost({ port: 9966 });
+    const query = autostart ? '?autostart' : '';
+    win.loadURL(c.uri + query);
     win.show();
-    // win.webContents.reloadIgnoringCache();
   });
 
-  // win.webContents.openDevTools();
+  if (!autostart) win.webContents.openDevTools();
 }
 
 // app.whenReady().then(createWindow);
 app.on("ready", createWindow);
 app.on("quit", () => {
   if (server) {
-    console.log("quitting");
     server.close();
     server = null;
   }
 });
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
-});
 
-app.on("activate", () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
-  }
+app.on("window-all-closed", () => {
+  app.quit();
 });
